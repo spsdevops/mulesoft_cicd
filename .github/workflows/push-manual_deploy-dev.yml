@@ -31,4 +31,4 @@ jobs:
       run: |
         mvn deploy
     - name: "Desplegar"
-      run: mvn clean package deploy -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -DmuleDeploy
+      run: mvn clean package deploy -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Denvironment=Sandbox -DmuleDeploy
