@@ -26,7 +26,7 @@ jobs:
         cache: 'maven'
     - uses: s4u/maven-settings-action@v2.6.0
       with:
-        servers: '[{"id": "anypoint-exchange", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
+        servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
     - name: "Construir y Publicar en Exchange"
       run: |
         mvn clean deploy -DskipTests -Dlicense.skip=true
