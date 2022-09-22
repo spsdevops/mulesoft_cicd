@@ -1,0 +1,95 @@
+name: 1 Deploy Develop 🚀
+
+concurrency: develop
+
+on:
+  workflow_dispatch:
+    inputs:
+      prometheus:
+        description: 'Deploy Prometheus?'
+        required: true
+        default: false
+        type: boolean
+      promtail:
+        description: 'Deploy Promtail?'
+        default: false
+        required: true
+        type: boolean    
+  push:
+    branches:
+      - main
+    
+        
+env:
+  KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
+  OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+  OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+  OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+  OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+  OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+  AMBIENTE: develop
+  VERSION: ${{ github.sha }}
+
+jobs:
+  kube-skaffold-cicd:
+    runs-on: ubuntu-22.04
+    environment: develop
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Validating Kubernetes manifests
+      run: |
+        echo "Installing datree"
+        curl https://get.datree.io | /bin/bash
+        #datree test kubernetes-specifications/* --no-record
+
+    - name: Setting Kubernetes Config           
+      run: |
+        echo "show me the config"
+        kubectl config view
+        kubectl version --client
+        echo "KUBE_CONFIG path"
+        mkdir ~/.kube/
+        ls ~/.kube/
+        echo "trying to set KUBE_CONFIG.."
+        #echo "$KUBE_CONFIG" > ~/.kube/config
+        echo "trying to Get Nodes"
+        echo "show me the config"
+        kubectl config view        
+        #kubectl get nodes
+    - name: Setting Skaffold
+      run: |
+        echo "Installing SKaffold..."
+        curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+        sudo install skaffold /usr/local/bin/
+        echo "Verifying SKaffold installation..."
+        skaffold version
+
+    - name: Configure Kubectl
+      uses: oracle-actions/configure-kubectl-oke@v1.0
+      id: test-configure-kubectl-oke-action
+      with:
+        cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+    - name: Run Kubectl
+      run: kubectl get nodes -A    
+      
+    - name: Deploying Develop
+      run: |
+        kubectl create namespace develop || echo "Ya existe el namespace develop"
+        echo "Deploying develop...."
+        
+        skaffold run --namespace=develop     
+      shell: bash
+
+    - name: Testing installations
+      run: |
+        kubectl get pods
+        kubectl get pods -n develop
+        kubectl get svc -n develop
