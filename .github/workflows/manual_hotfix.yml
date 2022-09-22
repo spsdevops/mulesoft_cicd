@@ -1,0 +1,30 @@
+name: manual_hotfix
+
+
+on:
+  
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Versión a la que se le hará hotfix
+        required: true
+        type: string
+      version_fix:
+        description: Versión que se estaría liberando para este fix. Ej. Si la versión a corregir es 3.0.1 esta versión sería 3.0.2
+        required: true
+        type: string
+
+concurrency: develop
+
+jobs:
+
+  Hotfix:
+    permissions: write-all
+    uses: spsdevops/mulesoft_cicd/.github/workflows/reusable_create_fix.yml@main
+    with:
+      ref: ${{github.event.inputs.version}}
+      fix: ${{github.event.inputs.version_fix}}
+
+  MuleDeploy:
+    needs: Hotfix
+    secrets: inherit
