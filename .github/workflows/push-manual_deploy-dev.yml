@@ -25,9 +25,9 @@ jobs:
         java-version: '11'
     - uses: s4u/maven-settings-action@v2.6.0
       with:
-        servers: '[{"id": "anypoint-exchange", "username": "~~~Client~~~", "password": "${{MULE_CLIENT_ID}}~?~${{MULE_CLIENT_SECRET}}"}]'
+        servers: '[{"id": "anypoint-exchange", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
     - name: "Construir y Publicar"
       run: |
         mvn deploy
     - name: "Publicar en Exchange"
-      run: mvn clean package deploy -Dclientid=${{MULE_CLIENT_ID}} -Dclientsecret=${{MULE_CLIENT_SECRET}} -DmuleDeploy
+      run: mvn clean package deploy -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -DmuleDeploy
