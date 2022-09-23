@@ -81,4 +81,4 @@ jobs:
         mvn versions:set -DnewVersion=$VERSION
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No fue posible publicarse en exchange"
     - name: "Desplegar"
-      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Denvironment=Sandbox -DmuleDeploy            
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Denvironment=SBX-SPS -DmuleDeploy            
