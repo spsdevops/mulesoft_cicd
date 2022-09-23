@@ -40,7 +40,7 @@
 						<connectedAppClientId>${clientid}</connectedAppClientId>
         				<connectedAppClientSecret>${clientsecret}</connectedAppClientSecret>
 						<connectedAppGrantType>client_credentials</connectedAppGrantType>
-						<applicationName>sps-test-cicd</applicationName>
+						<applicationName>${appname}</applicationName>
 						<replicas>1</replicas>
 						<vCores>0.1</vCores>
 					</cloudhub2Deployment>
