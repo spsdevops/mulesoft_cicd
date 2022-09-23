@@ -4,7 +4,7 @@
 
 	<groupId>ac584c40-1bf7-4c08-96a3-c9013a01d871</groupId>
 	<artifactId>mule_test</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.5-1</version>
 	<packaging>mule-application</packaging>
 
 	<name>mule_test</name>
@@ -160,7 +160,7 @@
 		<repository>
 		<id>anypoint-exchange-v3</id>
 		<name>Corporate Repository</name>
-		<url>https://maven.anypoint.mulesoft.com/api/v3/organizations/ac584c40-1bf7-4c08-96a3-c9013a01d871/maven</url>
+		<url>https://maven.anypoint.mulesoft.com/api/v2/organizations/ac584c40-1bf7-4c08-96a3-c9013a01d871/maven</url>
 		<layout>default</layout>
 		</repository>
 	</distributionManagement>
