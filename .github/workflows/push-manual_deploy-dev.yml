@@ -29,6 +29,7 @@ jobs:
         servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
     - name: "Construir y Publicar en Exchange"
       run: |
+        mvn versions:set -DnewVersion=0.0.0-$VERSION
         mvn clean deploy -DskipTests -Dlicense.skip=true
     - name: "Desplegar"
       run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Denvironment=Sandbox -DmuleDeploy
