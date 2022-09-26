@@ -13,12 +13,13 @@ on:
         
 env:
   VERSION: ${{ inputs.version }}
-  AMBIENTE: production
+  AMBIENTE: Production
+  MULE_ENV: Production
 
 jobs:
   MuleDeploy:
     runs-on: ubuntu-22.04
-    environment: production
+    environment: Production
     steps:
     - uses: actions/checkout@v2
       with:
@@ -80,6 +81,6 @@ jobs:
     - name: "Construir y Publicar en Exchange"
       run: |
         mvn versions:set -DnewVersion=$VERSION
-        mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No fue posible publicarse en exchange"
+        mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
     - name: "Desplegar"
-      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=sps-test-cicd-$AMBIENTE -Denvironment=Production -DmuleDeploy            
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=sps-test-cicd-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy            
