@@ -14,7 +14,7 @@ on:
 env:
   VERSION: ${{ inputs.version }}
   HASH: ${{ github.sha }}
-  AMBIENTE: Preprod
+  AMBIENTE: preprod
   MULE_ENV: Preprod
 
 jobs:

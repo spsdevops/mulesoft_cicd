@@ -13,7 +13,7 @@ on:
         
 env:
   VERSION: ${{ inputs.version }}
-  AMBIENTE: Production
+  AMBIENTE: production
   MULE_ENV: Production
 
 jobs:
