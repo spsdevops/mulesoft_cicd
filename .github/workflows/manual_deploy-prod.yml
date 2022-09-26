@@ -78,9 +78,30 @@ jobs:
     - uses: s4u/maven-settings-action@v2.6.0
       with:
         servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
+    - name: Obtener nombre de proyecto
+      run: |
+        import os, re
+        from xml.etree import ElementTree
+
+        # Obtiene nombre del POM
+        namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
+        tree = ElementTree.parse("pom.xml")
+        root = tree.getroot()
+        name = root.find("./xmlns:name", namespaces=namespaces)
+        print(f"pom/name: {name}")
+
+        # Convirte nombre a un nombre DNS valido
+        nombre = re.sub(r"[^a-zA-Z0-9]+", "-", name.text).lower()
+        print(f"nombre_limpio: {nombre}")      
+
+        # Escribe variable
+        print("Escribiendo nombre en GITHUB_ENV")
+        with open(os.getenv('GITHUB_ENV'), "a") as github_env:
+          github_env.write(f"nombre_limpio={nombre}")
+      shell: python
     - name: "Construir y Publicar en Exchange"
       run: |
         mvn versions:set -DnewVersion=$VERSION
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
     - name: "Desplegar"
-      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=sps-test-cicd-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy            
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy

@@ -49,7 +49,6 @@ jobs:
         with open(os.getenv('GITHUB_ENV'), "a") as github_env:
           github_env.write(f"nombre_limpio={nombre}")
       shell: python
-
     - name: "Construir y Publicar en Exchange"
       run: |
         mvn versions:set -DnewVersion=0.0.1-$VERSION
