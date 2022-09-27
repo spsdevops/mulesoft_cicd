@@ -1,4 +1,4 @@
-name: 3 Promote to Production 🚀
+name: 3 Promote to Production 📦🚀
 
 concurrency: production
 
@@ -48,13 +48,11 @@ jobs:
         git checkout ${{inputs.version}}
         git checkout -b releases/${{inputs.version}}
         # Copiando los workflows actualizados...
-        git checkout main .github/workflows/manual_deploy_dev.yml || echo "Sin cambios"
-        git checkout main .github/workflows/manual_hotfix.yml || echo "Sin cambios"
-        git checkout main .github/workflows/manual_pre-release.yml || echo "Sin cambios"
-        git checkout main .github/workflows/manual_redeploy.yml || echo "Sin cambios"
-        git checkout main .github/workflows/manual_release.yml || echo "Sin cambios"
-        git checkout main .github/workflows/push-manual_main.yml || echo "Sin cambios"
-        git checkout main pfg-sam.json || echo "Sin cambios"
+        git checkout main .github/workflows/manual_deploy-pre.yml
+        git checkout main .github/workflows/manual_deploy-prod.yml
+        git checkout main .github/workflows/manual_fix.yml
+        git checkout main .github/workflows/manual_redeploy.yml
+        git checkout main .github/workflows/push-manual_deploy-dev.yml
         git commit -m "ci(github): Se agregan workflows actualizados" || echo "Sin cambios"
         git diff HEAD^ HEAD
         git tag --force ${{inputs.version}} 
