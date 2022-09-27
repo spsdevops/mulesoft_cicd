@@ -1,4 +1,4 @@
-name: 4 Arreglar release 🐛 
+name: 5 Arreglar release 🐛 
 
 concurrency: develop
 
@@ -20,15 +20,13 @@ env:
 
 jobs:
   CrearRamaFix:
-    permissions: write-all
-    uses: spsdevops/mulesoft_cicd/.github/workflows/reusable_create_fix.yml@main
-    with:
-      ref: ${{github.event.inputs.version}}
-      fix: ${{github.event.inputs.version_fix}}
+    runs-on: ubuntu-22.04
+    environment: Production
+    steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Creando rama para solución de error (fix/x.x.x)
+      - name: "Creando rama para solución de error (fix/x.x.x)"
         run: |
           # Configurando usuario de Github...
           git config --global user.name 'Github'
@@ -58,27 +56,27 @@ jobs:
       - uses: s4u/maven-settings-action@v2.6.0
         with:
           servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
-    - name: Obtener nombre de proyecto
-      run: |
-        import os, re
-        from xml.etree import ElementTree
+      - name: Obtener nombre de proyecto
+        run: |
+          import os, re
+          from xml.etree import ElementTree
 
-        # Obtiene nombre del POM
-        namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
-        tree = ElementTree.parse("pom.xml")
-        root = tree.getroot()
-        name = root.find("./xmlns:name", namespaces=namespaces)
-        print(f"pom/name: {name}")
+          # Obtiene nombre del POM
+          namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
+          tree = ElementTree.parse("pom.xml")
+          root = tree.getroot()
+          name = root.find("./xmlns:name", namespaces=namespaces)
+          print(f"pom/name: {name}")
 
-        # Convirte nombre a un nombre DNS valido
-        nombre = re.sub(r"[^a-zA-Z0-9]+", "-", name.text).lower()
-        print(f"nombre_limpio: {nombre}")      
+          # Convirte nombre a un nombre DNS valido
+          nombre = re.sub(r"[^a-zA-Z0-9]+", "-", name.text).lower()
+          print(f"nombre_limpio: {nombre}")      
 
-        # Escribe variable
-        print("Escribiendo nombre en GITHUB_ENV")
-        with open(os.getenv('GITHUB_ENV'), "a") as github_env:
-          github_env.write(f"nombre_limpio={nombre}")
-      shell: python
+          # Escribe variable
+          print("Escribiendo nombre en GITHUB_ENV")
+          with open(os.getenv('GITHUB_ENV'), "a") as github_env:
+            github_env.write(f"nombre_limpio={nombre}")
+        shell: python
       - name: "Construir y Publicar en Exchange"
         run: |
           mvn versions:set -DnewVersion=0.0.1-$VERSION
