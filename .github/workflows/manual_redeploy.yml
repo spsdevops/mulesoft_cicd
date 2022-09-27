@@ -51,7 +51,6 @@ jobs:
         git checkout releases/${{inputs.version}}
         HASH=$(git rev-parse --verify HEAD)
         echo "hash=$HASH" >> $GITHUB_ENV
-        echo "HASH: ${{env.hash}}"
 
 ############## MULE DEPLOY #############
 
@@ -86,7 +85,8 @@ jobs:
       shell: python
     - name: "Construir y Publicar en Exchange"
       run: |
-        mvn versions:set -DnewVersion=$VERSION-$HASH
+        echo "VERSION: $VERSION-${{env.hash}}"
+        mvn versions:set -DnewVersion=$VERSION-${{env.hash}}
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
 
     - name: "Desplegar Develop"
