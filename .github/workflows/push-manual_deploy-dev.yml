@@ -31,9 +31,30 @@ jobs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '8'
         cache: 'maven'
-    - uses: s4u/maven-settings-action@v2.6.0
+    - name: maven-settings-xml-action
+      uses: whelk-io/maven-settings-xml-action@v20
       with:
-        servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
+        servers: |
+          [
+            {
+              "id": "anypoint-exchange-v3", 
+              "username": "~~~Client~~~",
+              "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"
+            },
+            {
+              "id": "MuleRepository", 
+              "username": "${{secrets.MULE_REPO_USER}}",
+              "password": "${{secrets.MULE_REPO_PASSWORD}}"
+            }
+          ]
+        repositories: |
+          [
+            {
+              "id": "MuleRepository",
+              "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/"
+            }
+          ]
+
     - name: Obtener nombre de proyecto
       run: |
         import os, re
