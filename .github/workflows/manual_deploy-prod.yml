@@ -15,6 +15,7 @@ env:
   VERSION: ${{ inputs.version }}
   AMBIENTE: production
   MULE_ENV: Production
+  HASH: ${{ github.sha }}
 
 jobs:
   MuleDeploy:
@@ -101,7 +102,7 @@ jobs:
       shell: python
     - name: "Construir y Publicar en Exchange"
       run: |
-        mvn versions:set -DnewVersion=$VERSION
+        mvn versions:set -DnewVersion=$VERSION-$HASH
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
     - name: "Desplegar"
       run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy
