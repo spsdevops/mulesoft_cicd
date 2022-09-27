@@ -83,7 +83,7 @@ jobs:
       shell: python
     - name: "Construir y Publicar en Exchange"
       run: |
-        mvn versions:set -DnewVersion=0.0.1-$VERSION
+        mvn versions:set -DnewVersion=$VERSION
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
 
     - name: "Desplegar"
