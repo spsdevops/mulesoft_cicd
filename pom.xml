@@ -41,7 +41,7 @@
         				<connectedAppClientSecret>${clientsecret}</connectedAppClientSecret>
 						<connectedAppGrantType>client_credentials</connectedAppGrantType>
 						<applicationName>${appname}</applicationName>
-						<replicas>1</replicas>
+						<replicas>${replicas}</replicas>
 						<vCores>0.1</vCores>
 					</cloudhub2Deployment>
 					<classifier>mule-application</classifier>
