@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="MULE_EE.4.4.0.ixe_clientes_system-test-suite" time="0.769" failures="0" errors="0" skipped="0" tests="2">
+  <properties>
+    <property key="sun.desktop" value="windows"/>
+    <property key="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property key="java.specification.version" value="11"/>
+    <property key="sun.cpu.isalist" value="amd64"/>
+    <property key="sun.jnu.encoding" value="Cp1252"/>
+    <property key="java.class.path" value="C:\Maven\apache-maven-3.8.4\boot\plexus-classworlds-2.6.0.jar"/>
+    <property key="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property key="sun.arch.data.model" value="64"/>
+    <property key="user.variant" value=""/>
+    <property key="java.vendor.url" value="https://adoptium.net/"/>
+    <property key="user.timezone" value="America/Mexico_City"/>
+    <property key="maven.conf" value="C:\Maven\apache-maven-3.8.4/conf"/>
+    <property key="os.name" value="Windows 10"/>
+    <property key="java.vm.specification.version" value="11"/>
+    <property key="sun.java.launcher" value="SUN_STANDARD"/>
+    <property key="user.country" value="MX"/>
+    <property key="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-11.0.16.101-hotspot\bin"/>
+    <property key="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher test -Denv=dev"/>
+    <property key="jdk.debug" value="release"/>
+    <property key="maven.home" value="C:\Maven\apache-maven-3.8.4"/>
+    <property key="sun.cpu.endian" value="little"/>
+    <property key="user.home" value="C:\Users\RicardoOrtega"/>
+    <property key="user.language" value="es"/>
+    <property key="sun.stderr.encoding" value="cp850"/>
+    <property key="java.specification.vendor" value="Oracle Corporation"/>
+    <property key="java.version.date" value="2022-08-12"/>
+    <property key="java.home" value="C:\Program Files\Eclipse Adoptium\jdk-11.0.16.101-hotspot"/>
+    <property key="file.separator" value="\"/>
+    <property key="java.vm.compressedOopsMode" value="Zero based"/>
+    <property key="line.separator" value="&#xd;&#xa;"/>
+    <property key="sun.stdout.encoding" value="cp850"/>
+    <property key="java.specification.name" value="Java Platform API Specification"/>
+    <property key="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property key="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property key="user.script" value=""/>
+    <property key="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property key="java.runtime.version" value="11.0.16.1+1"/>
+    <property key="user.name" value="RicardoOrtega"/>
+    <property key="path.separator" value=";"/>
+    <property key="os.version" value="10.0"/>
+    <property key="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property key="file.encoding" value="Cp1252"/>
+    <property key="guice.disable.misplaced.annotation.check" value="true"/>
+    <property key="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property key="java.vendor.version" value="Temurin-11.0.16.1+1"/>
+    <property key="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property key="java.io.tmpdir" value="C:\Users\RICARD~1\AppData\Local\Temp\"/>
+    <property key="java.version" value="11.0.16.1"/>
+    <property key="user.dir" value="C:\Users\RicardoOrtega\Git\ixe_poc_clientes_sapi"/>
+    <property key="os.arch" value="amd64"/>
+    <property key="maven.multiModuleProjectDirectory" value="C:\Users\RicardoOrtega\Git\ixe_poc_clientes_sapi"/>
+    <property key="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property key="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property key="env" value="dev"/>
+    <property key="sun.os.patch.level" value=""/>
+    <property key="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-11.0.16.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Eclipse Adoptium\jdk-11.0.16.101-hotspot\bin;C:\Python310\Scripts\;C:\Python310\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\erl10.7\bin;C:\Users\RicardoOrtega\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\ProgramData\chocolatey\bin;C:\tools\groovy-3.0.9\bin;C:\jq;C:\Program Files\PuTTY\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\dotnet\;C:\Program Files\Amazon\AWSCLIV2\;C:\tools\Manim\Scripts;C:\Program Files\GitHub CLI\;C:\Program Files\erl-24.3.4.5\bin;C:\Program Files (x86)\Elixir\bin;C:\Users\RicardoOrtega\.mix\escripts;C:\Users\RicardoOrtega\bin;C:\Users\RicardoOrtega\.cargo\bin;C:\Users\RicardoOrtega\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\RicardoOrtega\AppData\Local\Programs\Python\Python38\;C:\Users\RicardoOrtega\AppData\Local\Microsoft\WindowsApps;c:\users\ricardoortega\appdata\roaming\python\python38\scripts;c:\users\ricardoortega\.local\bin;C:\Users\RicardoOrtega\AppData\Roaming\Python\Python38\Scripts;C:\Users\RicardoOrtega\AppData\Local\Programs\espanso;C:\Users\RicardoOrtega\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.3\bin;C:\Gradle\gradle-7.3.1\bin;C:\Maven\apache-maven-3.8.4\bin;C:\cfn-format\cfn-format-v1.1.2-1_windows-amd64;C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\RicardoOrtega\.fly\bin;."/>
+    <property key="java.vm.info" value="mixed mode"/>
+    <property key="java.vendor" value="Eclipse Adoptium"/>
+    <property key="java.vm.version" value="11.0.16.1+1"/>
+    <property key="classworlds.conf" value="C:\Maven\apache-maven-3.8.4\bin\m2.conf"/>
+    <property key="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property key="library.jansi.path" value="C:\Maven\apache-maven-3.8.4\lib\jansi-native"/>
+    <property key="java.class.version" value="55.0"/>
+    <property key="munit.system.properties.file" value="C:\Users\RicardoOrtega\Git\ixe_poc_clientes_sapi\target\user.system.properties"/>
+    <property key="org.glassfish.grizzly.DEFAULT_MEMORY_MANAGER" value="org.glassfish.grizzly.memory.HeapMemoryManager"/>
+  </properties>
+  <testcase time="0.075" name="Respuesta_Fallida_ixe_clientes_system-test-suite-get:\clientes\(id):ixe_clientes_system-configTest" classname="MULE_EE.4.4.0.ixe_clientes_system-test-suite"/>
+  <testcase time="0.649" name="Respuesta_Exitosa_ixe_clientes_system-test-suite-get:\clientes\(id):ixe_clientes_system-configTest" classname="MULE_EE.4.4.0.ixe_clientes_system-test-suite"/>
+</testsuite>

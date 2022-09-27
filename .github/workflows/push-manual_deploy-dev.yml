@@ -69,3 +69,9 @@ jobs:
         cat summary.html >> $GITHUB_STEP_SUMMARY
     - name: "Desplegar"
       run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2.0.0
+      if: always()
+      with:
+        junit_files: "test-results/TEST-munit.MULE_EE.4.4.0.ixe_clientes_system-test-suite.xml"
+
