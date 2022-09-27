@@ -56,11 +56,11 @@ jobs:
           github_env.write(f"nombre_limpio={nombre}")
       shell: python
     - name: "Asignar versión main"
-      if: ${{contains(github.ref, "fix")}}
+      if: ${{contains(github.ref, 'fix')}}
       run: |
         mvn versions:set -DnewVersion=${GITHUB_REF:15}-$HASH
     - name: "Asignar versión fix/x.x."
-      if: ${{! contains(github.ref, "fix")}}
+      if: ${{!contains(github.ref, 'fix')}}
       run: |
         mvn versions:set -DnewVersion=$VERSION-$HASH
     - name: "Construir y Publicar en Exchange"
