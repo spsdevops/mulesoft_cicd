@@ -1,0 +1,88 @@
+name: 4 Arreglar release 🐛 
+
+concurrency: develop
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description:  📦🐛 Versión en la que se arreglará el problema.
+        required: true
+        type: string
+      version_fix:
+        description: 📦✅ Nueva versión que tendrá la solución. Ej. Si la versión a corregir es 3.0.1 esta versión sería 3.0.2
+        required: true
+        type: string
+
+env:
+  AMBIENTE: develop
+  MULE_ENV: Develop
+
+jobs:
+  CrearRamaFix:
+    permissions: write-all
+    uses: spsdevops/mulesoft_cicd/.github/workflows/reusable_create_fix.yml@main
+    with:
+      ref: ${{github.event.inputs.version}}
+      fix: ${{github.event.inputs.version_fix}}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Creando rama para solución de error (fix/x.x.x)
+        run: |
+          # Configurando usuario de Github...
+          git config --global user.name 'Github'
+          git config --global user.email 'workflow@noreply.github.com'
+          git branch --show-current
+
+          # Creando rama fix/${{inputs.fix}}...
+          git checkout ${{inputs.ref}}
+          git checkout -b fix/${{inputs.fix}}
+
+          # Copiando los workflows actualizados...
+          git checkout main .github/workflows/manual_deploy-pre.yml
+          git checkout main .github/workflows/manual_deploy-prod.yml
+          git checkout main .github/workflows/manual_fix.yml
+          git checkout main .github/workflows/manual_redeploy.yml
+          git checkout main .github/workflows/push-manual_deploy-dev.yml
+          git commit -m "ci(github): Se agregan workflows actualizados" || echo "Sin cambios"
+          git diff HEAD^ HEAD
+          git push origin fix/${{inputs.fix}}
+
+######### Mule Deploy ###############
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '8'
+          cache: 'maven'
+      - uses: s4u/maven-settings-action@v2.6.0
+        with:
+          servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
+    - name: Obtener nombre de proyecto
+      run: |
+        import os, re
+        from xml.etree import ElementTree
+
+        # Obtiene nombre del POM
+        namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
+        tree = ElementTree.parse("pom.xml")
+        root = tree.getroot()
+        name = root.find("./xmlns:name", namespaces=namespaces)
+        print(f"pom/name: {name}")
+
+        # Convirte nombre a un nombre DNS valido
+        nombre = re.sub(r"[^a-zA-Z0-9]+", "-", name.text).lower()
+        print(f"nombre_limpio: {nombre}")      
+
+        # Escribe variable
+        print("Escribiendo nombre en GITHUB_ENV")
+        with open(os.getenv('GITHUB_ENV'), "a") as github_env:
+          github_env.write(f"nombre_limpio={nombre}")
+      shell: python
+      - name: "Construir y Publicar en Exchange"
+        run: |
+          mvn versions:set -DnewVersion=0.0.1-$VERSION
+          mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
+
+      - name: "Desplegar"
+        run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy
