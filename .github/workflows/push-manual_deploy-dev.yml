@@ -66,5 +66,6 @@ jobs:
     - name: "Construir y Publicar en Exchange"
       run: |
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
+        cat summary.html >> $GITHUB_STEP_SUMMARY
     - name: "Desplegar"
       run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy
