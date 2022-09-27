@@ -55,9 +55,16 @@ jobs:
         with open(os.getenv('GITHUB_ENV'), "a") as github_env:
           github_env.write(f"nombre_limpio={nombre}")
       shell: python
-    - name: "Construir y Publicar en Exchange"
+    - name: "Asignar versión main"
+      if: ${{contains(github.ref, "fix")}}
+      run: |
+        mvn versions:set -DnewVersion=${GITHUB_REF:15}-$HASH
+    - name: "Asignar versión fix/x.x."
+      if: ${{! contains(github.ref, "fix")}}
       run: |
         mvn versions:set -DnewVersion=$VERSION-$HASH
+    - name: "Construir y Publicar en Exchange"
+      run: |
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
     - name: "Desplegar"
       run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy
