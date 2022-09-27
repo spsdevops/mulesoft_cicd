@@ -85,6 +85,10 @@ jobs:
         run: |
           mvn versions:set -DnewVersion=$VERSION_FIX-${{env.hash}}
           mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
-
+      - name: "Publicar resultados de pruebas"
+        uses: EnricoMi/publish-unit-test-result-action@v2.0.0
+        if: always()
+        with:
+          junit_files: "target/surefire-reports/*.xml"
       - name: "Desplegar"
         run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -Dreplicas=1 -DmuleDeploy
