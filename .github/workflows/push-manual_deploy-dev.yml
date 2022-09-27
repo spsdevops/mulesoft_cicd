@@ -55,11 +55,11 @@ jobs:
         with open(os.getenv('GITHUB_ENV'), "a") as github_env:
           github_env.write(f"nombre_limpio={nombre}")
       shell: python
-    - name: "Asignar versión main"
+    - name: "Asignar versión fix/x.x."
       if: ${{contains(github.ref, 'fix')}}
       run: |
         mvn versions:set -DnewVersion=${GITHUB_REF:15}-$HASH
-    - name: "Asignar versión fix/x.x."
+    - name: "Asignar versión main"
       if: ${{!contains(github.ref, 'fix')}}
       run: |
         mvn versions:set -DnewVersion=$VERSION-$HASH
