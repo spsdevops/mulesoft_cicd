@@ -1,4 +1,4 @@
-name: 4 Redeploy 🐛
+name: 4 Redeploy Release 🐛🚀
 
 concurrency: production
 
@@ -14,17 +14,24 @@ on:
         required: true
         type: choice
         options:
-          - develop
-          - preprod
-          - production
+          - Develop
+          - Preprod
+          - Production
     
 env:
   VERSION: ${{ inputs.version }}
+  AMBIENTE_DEV: develop
+  AMBIENTE_PRE: preprod
+  AMBIENTE_PROD: production
+  MULE_ENV_DEV: Develop
+  MULE_ENV_PRE: Preprod
+  MULE_ENV_PROD: Production
+
 
 jobs:
   MuleDeploy:
     runs-on: ubuntu-22.04
-    environment: ${{ inputs.AMBIENTE }}
+    environment: ${{ inputs.ambiente }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -42,3 +49,54 @@ jobs:
         git branch --show-current
         git fetch
         git checkout releases/${{inputs.version}}
+        HASH=$(git rev-parse --verify HEAD)
+        echo "hash=$HASH" >> $GITHUB_ENV
+
+############## MULE DEPLOY #############
+
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '8'
+        cache: 'maven'
+    - uses: s4u/maven-settings-action@v2.6.0
+      with:
+        servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
+    - name: Obtener nombre de proyecto
+      run: |
+        import os, re
+        from xml.etree import ElementTree
+
+        # Obtiene nombre del POM
+        namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
+        tree = ElementTree.parse("pom.xml")
+        root = tree.getroot()
+        name = root.find("./xmlns:name", namespaces=namespaces)
+        print(f"pom/name: {name}")
+
+        # Convirte nombre a un nombre DNS valido
+        nombre = re.sub(r"[^a-zA-Z0-9]+", "-", name.text).lower()
+        print(f"nombre_limpio: {nombre}")      
+
+        # Escribe variable
+        print("Escribiendo nombre en GITHUB_ENV")
+        with open(os.getenv('GITHUB_ENV'), "a") as github_env:
+          github_env.write(f"nombre_limpio={nombre}")
+      shell: python
+    - name: "Construir y Publicar en Exchange"
+      run: |
+        echo "VERSION: $VERSION-${{env.hash}}"
+        mvn versions:set -DnewVersion=$VERSION-${{env.hash}}
+        mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
+
+    - name: "Desplegar Develop"
+      if: ${{ inputs.ambiente == 'Develop' }}
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE_DEV -Denvironment=$MULE_ENV_DEV -DmuleDeploy
+
+    - name: "Desplegar Preprod"
+      if: ${{ inputs.ambiente == 'Preprod' }}
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE_PRE -Denvironment=$MULE_ENV_PRE -DmuleDeploy
+
+    - name: "Desplegar Production"
+      if: ${{ inputs.ambiente == 'Production' }}
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE_PROD -Denvironment=$MULE_ENV_PROD -DmuleDeploy

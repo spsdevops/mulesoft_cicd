@@ -7,16 +7,23 @@ on:
   push:
     branches:
       - main
-    
+      - 'fix/**'
+      - 'feat/**'
+    paths-ignore:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.github/workflows/**'
         
 env:
   AMBIENTE: develop
-  VERSION: ${{ github.sha }}
+  VERSION: 0.0.1
+  HASH: ${{ github.sha }}
+  MULE_ENV: Develop
 
 jobs:
   MuleDeploy:
     runs-on: ubuntu-22.04
-    environment: develop
+    environment: Develop
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-java@v3
@@ -27,9 +34,37 @@ jobs:
     - uses: s4u/maven-settings-action@v2.6.0
       with:
         servers: '[{"id": "anypoint-exchange-v3", "username": "~~~Client~~~", "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"}]'
+    - name: Obtener nombre de proyecto
+      run: |
+        import os, re
+        from xml.etree import ElementTree
+
+        # Obtiene nombre del POM
+        namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
+        tree = ElementTree.parse("pom.xml")
+        root = tree.getroot()
+        name = root.find("./xmlns:name", namespaces=namespaces)
+        print(f"pom/name: {name}")
+
+        # Convirte nombre a un nombre DNS valido
+        nombre = re.sub(r"[^a-zA-Z0-9]+", "-", name.text).lower()
+        print(f"nombre_limpio: {nombre}")      
+
+        # Escribe variable
+        print("Escribiendo nombre en GITHUB_ENV")
+        with open(os.getenv('GITHUB_ENV'), "a") as github_env:
+          github_env.write(f"nombre_limpio={nombre}")
+      shell: python
+    - name: "Asignar versión main"
+      if: ${{contains(github.ref, 'fix')}}
+      run: |
+        mvn versions:set -DnewVersion=${GITHUB_REF:15}-$HASH
+    - name: "Asignar versión fix/x.x."
+      if: ${{!contains(github.ref, 'fix')}}
+      run: |
+        mvn versions:set -DnewVersion=$VERSION-$HASH
     - name: "Construir y Publicar en Exchange"
       run: |
-        mvn versions:set -DnewVersion=0.0.1-$VERSION
         mvn clean deploy -DskipTests -Dlicense.skip=true || echo "No se publico en exchange"
     - name: "Desplegar"
-      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=sps-test-cicd-$AMBIENTE -Denvironment=Develop -DmuleDeploy
+      run: mvn clean package deploy -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -DmuleDeploy
