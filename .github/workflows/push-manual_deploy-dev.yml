@@ -18,7 +18,7 @@ env:
   AMBIENTE: develop
   VERSION: 0.0.1
   HASH: ${{ github.sha }}
-  MULE_ENV: Develop
+  MULE_ENV: Sandbox
 
 jobs:
   MuleDeploy:

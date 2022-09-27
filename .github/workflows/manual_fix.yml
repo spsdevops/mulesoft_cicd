@@ -16,7 +16,7 @@ on:
 
 env:
   AMBIENTE: develop
-  MULE_ENV: Develop
+  MULE_ENV: Sandbox
   VERSION: ${{ inputs.version }}
   VERSION_FIX: ${{ inputs.version_fix }}
 

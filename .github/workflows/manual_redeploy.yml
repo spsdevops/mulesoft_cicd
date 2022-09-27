@@ -23,7 +23,7 @@ env:
   AMBIENTE_DEV: develop
   AMBIENTE_PRE: preprod
   AMBIENTE_PROD: production
-  MULE_ENV_DEV: Develop
+  MULE_ENV_DEV: Sandbox
   MULE_ENV_PRE: Preprod
   MULE_ENV_PROD: Production
 
