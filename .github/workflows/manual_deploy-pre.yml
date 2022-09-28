@@ -20,6 +20,7 @@ env:
   HASH: ${{ github.sha }}
   AMBIENTE: preprod
   MULE_ENV: Preprod
+  ENV: test
 
 jobs:
   MuleDeploy:
@@ -126,11 +127,23 @@ jobs:
     - name: "Construir y Publicar en Exchange"
       run: |
         mvn versions:set -DnewVersion=$VERSION-$HASH
-        mvn clean deploy -Dlicense.skip=true || echo "No se publico en exchange"
+        mvn clean deploy -Denv=$ENV -Dlicense.skip=true || echo "No se publico en exchange"
     - name: "Publicar resultados de pruebas"
       uses: EnricoMi/publish-unit-test-result-action@v2.0.0
       if: always()
       with:
         junit_files: "target/surefire-reports/*.xml"
     - name: "Desplegar"
-      run: mvn clean package deploy -DskipTests -Dlicense.skip=true -Dclientid=${{secrets.MULE_CLIENT_ID}} -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}} -Dappname=${{env.nombre_limpio}}-$AMBIENTE -Denvironment=$MULE_ENV -Dreplicas=${{inputs.replicas}} -DmuleDeploy
+      run: |
+        mvn clean package deploy\
+         -DmuleDeploy\
+         -DskipTests\
+         -Dlicense.skip=true\
+         -Dclientid=${{secrets.MULE_CLIENT_ID}}\
+         -Dclientsecret=${{secrets.MULE_CLIENT_SECRET}}\
+         -Dappname=${{env.nombre_limpio}}-$AMBIENTE\
+         -Denvironment=$MULE_ENV\
+         -Danypoint_client_id=${{secrets.ANYPOINT_CLIENT_ID}}\
+         -Danypoint_client_secret=${{secrets.ANYPOINT_CLIENT_SECRET}}\
+         -Dreplicas=${{inputs.replicas}}\
+         -Denv=$ENV

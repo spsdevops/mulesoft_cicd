@@ -67,6 +67,8 @@
 						<runCoverage>true</runCoverage>
 						<formats>
 							<format>html</format>
+							<format>html</format>
+							<format>console</format>
 						</formats>
 					</coverage>
 				</configuration>
