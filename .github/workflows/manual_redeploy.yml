@@ -55,7 +55,7 @@ jobs:
         git config --global user.email 'workflow@noreply.github.com'
         git branch --show-current
         git fetch
-        git checkout releases/${{inputs.version}}
+        git checkout ${{inputs.version}}
         HASH=$(git rev-parse --verify HEAD)
         echo "hash=$HASH" >> $GITHUB_ENV
 
