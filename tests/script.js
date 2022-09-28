@@ -10,7 +10,7 @@ export default function () {
 
   const res = http.get('https://mule-test-preprod-xa2mx3.5sc6y6-1.usa-e2.cloudhub.io/test');
 
-  // Validaciones, cada validación genera un procentaje de error.
+  // Validaciones, cada validación genera un procentaje de exito.
   check(res, {
     //Validación 1
     'Hello test': (r) =>
