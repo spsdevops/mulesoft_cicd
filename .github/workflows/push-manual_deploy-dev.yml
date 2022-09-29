@@ -22,7 +22,59 @@ env:
   ENV: dev
 
 jobs:
+  MuleTest:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '8'
+        cache: 'maven'
+    - name: maven-settings-xml-action
+      uses: whelk-io/maven-settings-xml-action@v20
+      with:
+        servers: |
+          [
+            {
+              "id": "anypoint-exchange-v3", 
+              "username": "~~~Client~~~",
+              "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"
+            },
+            {
+              "id": "MuleRepository", 
+              "username": "${{secrets.MULE_REPO_USER}}",
+              "password": "${{secrets.MULE_REPO_PASSWORD}}"
+            }
+          ]
+        repositories: |
+          [
+            {
+              "id": "MuleRepository",
+              "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/"
+            }
+          ]
+    - name: "Asignar versión fix/x.x."
+      if: ${{contains(github.ref, 'fix')}}
+      run: |
+        echo "# Version: ${GITHUB_REF:15}-$HASH" >> $GITHUB_STEP_SUMMARY
+    - name: "Asignar versión main"
+      if: ${{!contains(github.ref, 'fix')}}
+      run: |
+        echo "# Version: $VERSION-$HASH" >> $GITHUB_STEP_SUMMARY
+    - name: "Changelog"
+      run: |
+        cat CHANGELOG.md >> $GITHUB_STEP_SUMMARY
+    - name: "Pruebas MUnit"
+      run: |
+        mvn clean test -Denv=$ENV -Dlicense.skip=true
+    - name: "Publicar resultados de pruebas"
+      uses: EnricoMi/publish-unit-test-result-action@v2.0.0
+      if: always()
+      with:
+        junit_files: "target/surefire-reports/*.xml"
   MuleDeploy:
+    needs: MuleTest
     runs-on: ubuntu-22.04
     environment: Develop
     steps:
@@ -87,15 +139,10 @@ jobs:
         mvn versions:set -DnewVersion=$VERSION-$HASH
     - name: "Construir y Publicar en Exchange"
       run: |
-        mvn clean deploy -Denv=$ENV -Dlicense.skip=true || echo "No se publico en exchange"
-    - name: "Publicar resultados de pruebas"
-      uses: EnricoMi/publish-unit-test-result-action@v2.0.0
-      if: always()
-      with:
-        junit_files: "target/surefire-reports/*.xml"
+        mvn deploy -Denv=$ENV -Dlicense.skip=true -DskipTests || echo "No se publico en exchange"
     - name: "Desplegar"
       run: |
-        mvn clean package deploy\
+        mvn package deploy\
          -DmuleDeploy\
          -DskipTests\
          -Dlicense.skip=true\
@@ -107,5 +154,3 @@ jobs:
          -Danypoint_client_secret=${{secrets.ANYPOINT_CLIENT_SECRET}}\
          -Dreplicas=1\
          -Denv=$ENV
-
-
