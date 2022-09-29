@@ -40,4 +40,4 @@ Ejemplo:
 - Ejecutar el script X en la base de datos Y.
 - Redesplegar la versión 1.4.3
 -->
-- 2.0.3
+- 3.0.0
