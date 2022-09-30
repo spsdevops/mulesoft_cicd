@@ -13,7 +13,7 @@
 			<flow-ref doc:name="Flow-ref to mule_testFlow" doc:id="9b2e9f30-f2aa-4d65-a39f-fa5f7d0e3384" name="mule_testFlow"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert-equals doc:name="Assert equals" doc:id="c04ef893-99c9-43ea-aa1c-cdd2006c8f95" actual="#[payload]" expected="Hello test" message="El payload no coincide"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="c04ef893-99c9-43ea-aa1c-cdd2006c8f95" actual="#[payload]" expected="Hello Mule" message="El payload no coincide"/>
 		</munit:validation>
 	</munit:test>
 
