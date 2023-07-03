@@ -18,7 +18,7 @@ Ejemplo:
 - Se coloca header de Content-Type=application/JSON al llamar al API X
 - Se resuelve bug #123 que impedía paginar la respuesta cuando X
 -->
-- Se modifica payload a "HOLA TEST"
+- Se modifica payload a "HOLA SPS"
 
 
 ### ❌ Eliminado
