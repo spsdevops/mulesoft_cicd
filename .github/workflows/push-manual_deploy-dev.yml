@@ -74,6 +74,7 @@ jobs:
       with:
         junit_files: "target/surefire-reports/*.xml"
   MuleDeploy:
+    if: github.event_name != 'pull_request'
     needs: MuleTest
     runs-on: ubuntu-22.04
     environment: Develop
