@@ -37,7 +37,7 @@ jobs:
         servers: |
           [
             {
-              "id": "anypoint-exchange-v3", 
+              "id": "anypoint-exchange", 
               "username": "~~~Client~~~",
               "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"
             },
@@ -90,7 +90,7 @@ jobs:
         servers: |
           [
             {
-              "id": "anypoint-exchange-v3", 
+              "id": "anypoint-exchange", 
               "username": "~~~Client~~~",
               "password": "${{secrets.MULE_CLIENT_ID}}~?~${{secrets.MULE_CLIENT_SECRET}}"
             },
