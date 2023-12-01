@@ -18,7 +18,7 @@ Ejemplo:
 - Se coloca header de Content-Type=application/JSON al llamar al API X
 - Se resuelve bug #123 que impedía paginar la respuesta cuando X
 -->
-- Se modifica payload a "HOLA MUNDO"
+- Se modifica payload a "HOLA SPS DICIMBRE"
 
 
 ### ❌ Eliminado
@@ -40,4 +40,4 @@ Ejemplo:
 - Ejecutar el script X en la base de datos Y.
 - Redesplegar la versión 1.4.3
 -->
-- 3.1.0
+- 5.0.0
