@@ -15,12 +15,13 @@ https://www.youtube.com/watch?v=RkhpAeWRBTg
 - Al momento de realizar este ejercicio, Exchange no permitía republicar una aplicación con el mismo nombre por lo que se agrega el hash al nombre de la aplicación para permitir subir cambios, si se redespliega algo el pipeline devovlera el mensaje No se publico en exchange y continuará al despliegue.
 - Exchange tiene un limite de cuantos artefactos puedes tener, por lo que se deberá crear un proceso programado que vaya limpiando las aplicaciones viejas que ya no se usan, a Exchange le toma varios días completar el borrado.
 - Si se usa una Connected App para interactuar con la fachade de Maven para Exchange las credenciales se deben pasar así en el settings.xml:
-    <server>
-        <id>{repository id}</id>
-        <username>~~~Client~~~</username>
-        <password>{Client ID}~?~{Secret}</password>
-    </server>
-</servers>
+
+        <server>
+                <id>{repository id}</id>
+                <username>~~~Client~~~</username>
+                <password>{Client ID}~?~{Secret}</password>
+            </server>
+        </servers>
 
 - Permisos necesarios par aun usuario o Connected App para desplegar: https://help.mulesoft.com/s/article/Minimum-permissions-and-scopes-required-for-deploying-CloudHub-2-0-applications
 - Si se usa una Connected App se debe utilizar agregar el permiso Design Center Developer para que se pueda autenticar correctamente: https://docs.mulesoft.com/cloudhub-2/ch2-deploy-maven#authentication-methods
